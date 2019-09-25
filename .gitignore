@@ -1,0 +1,2 @@
+# Ignoring all the files which would populate build folder i.e. '/bin/'
+/bin/
