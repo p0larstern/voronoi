@@ -1,10 +1,11 @@
+#include "voronoi.hh"
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
 #include<iostream>
 #include<stdio.h>
 
 const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_HEIGHT = 640;
 
 SDL_Window* window = NULL;
 SDL_Renderer* rendr = NULL;
@@ -42,13 +43,34 @@ bool loadMedia() {return true;}
 
 void close()
 {
-    SDL_DestroyRenderer(rendr);
-    rendr = NULL;
-    SDL_DestroyWindow(window);
-    window = NULL;
+	cout<<"\nClosing application.";
+	SDL_DestroyRenderer(rendr);
+    	rendr = NULL;
+    	SDL_DestroyWindow(window);
+	window = NULL;
 
-    IMG_Quit();
-    SDL_Quit();
+    	IMG_Quit();
+    	SDL_Quit();
+	cout<<"\nApp closed\n";
+}
+
+void createDiagram()
+{
+        SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);
+        SDL_RenderDrawLine(rendr, 145.325, 153, -1497.45, -2955.64);
+        SDL_RenderDrawLine(rendr, 145.325, 153, 185.478, 228.981);
+        SDL_RenderDrawLine(rendr, 142.835, 299, 185.478, 228.981);
+        SDL_RenderDrawLine(rendr, 142.835, 299, -1878.78, 3618.43);
+        SDL_RenderDrawLine(rendr, 185.478, 228.981, 1139.97, 163.605);
+        SDL_RenderPresent(rendr);
+	cout<<"\ncreating diagram";
+}
+void clearDiagram()
+{
+	SDL_SetRenderDrawColor(rendr, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(rendr);
+	SDL_RenderPresent(rendr);
+	cout<<"\nclearing diagram";
 }
 
 int main(int argc, char* argv[])
@@ -61,25 +83,26 @@ int main(int argc, char* argv[])
         else
         {
             bool quit = false;
-            SDL_Event evt;
-
+            SDL_Event e;
+	    clearDiagram();
             while(!quit)
             {
-                while (SDL_PollEvent(&evt) != 0)
+                while (SDL_PollEvent(&e) != 0)
                 {
-                    if(evt.type == SDL_QUIT) quit=true;
+                    if(e.type == SDL_QUIT) quit=true;
+                    else if(e.type == SDL_KEYDOWN)
+                    {
+                        switch(e.key.keysym.sym)
+                        {
+                        case SDLK_c:
+                            createDiagram();
+                            break;
+                        case SDLK_x:
+                            clearDiagram();
+                            break;
+                        }
+                    }
                 }
-                SDL_SetRenderDrawColor(rendr, 0xFF, 0xFF, 0xFF, 0xFF);
-                SDL_RenderClear(rendr);
-
-                SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);
-                SDL_RenderDrawLine(rendr, 145.325, 153, -1497.45, -2955.64);
-                SDL_RenderDrawLine(rendr, 145.325, 153, 185.478, 228.981);
-                SDL_RenderDrawLine(rendr, 142.835, 299, 185.478, 228.981);
-                SDL_RenderDrawLine(rendr, 142.835, 299, -1878.78, 3618.43);
-                SDL_RenderDrawLine(rendr, 185.478, 228.981, 1139.97, 163.605);
-                
-                SDL_RenderPresent(rendr);
             }
         }
         

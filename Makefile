@@ -1,1 +1,2 @@
-# TODO- add proper target and recipe for the project
+all:
+	g++ src/app.cpp -w -lSDL2 -lSDL2_image -o bin/app
