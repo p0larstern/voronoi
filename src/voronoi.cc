@@ -248,3 +248,8 @@ void print_output()
       cout << p0.x << " " << p0.y << " " << p1.x << " " << p1.y << endl;
    }
 }
+
+vector<seg*> getOutput()
+{
+	return output;
+}

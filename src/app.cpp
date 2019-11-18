@@ -10,6 +10,9 @@ const int SCREEN_HEIGHT = 640;
 SDL_Window* window = NULL;
 SDL_Renderer* rendr = NULL;
 
+priority_queue<point,  vector<point>,  gt> points;
+priority_queue<event*, vector<event*>, gt> events;
+
 bool init()
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -56,22 +59,32 @@ void close()
 
 void createDiagram()
 {
-        SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);
-        SDL_RenderDrawLine(rendr, 145.325, 153, -1497.45, -2955.64);
-        SDL_RenderDrawLine(rendr, 145.325, 153, 185.478, 228.981);
-        SDL_RenderDrawLine(rendr, 142.835, 299, 185.478, 228.981);
-        SDL_RenderDrawLine(rendr, 142.835, 299, -1878.78, 3618.43);
-        SDL_RenderDrawLine(rendr, 185.478, 228.981, 1139.97, 163.605);
+	vector<seg*> outLines = getOutput();
+	vector<seg*>::iterator i;
+	point p0, p1;
+
+        SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);		//sets drawing color to red
+	for(i = outLines.begin(); i != output.end(); i++)
+	{
+		p0 = (*i)->start;
+		p1 = (*i)->end;
+		SDL_RenderDrawLine(rendr, p0.x, p0.y, p1.x, p1.y);
+	}
         SDL_RenderPresent(rendr);
 	cout<<"\ncreating diagram";
 }
+
 void clearDiagram()
 {
-	SDL_SetRenderDrawColor(rendr, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(rendr, 0xFF, 0xFF, 0xFF, 0xFF);		//sets drawing color to white
 	SDL_RenderClear(rendr);
 	SDL_RenderPresent(rendr);
 	cout<<"\nclearing diagram";
 }
+
+void addPoint()
+{
+
 
 int main(int argc, char* argv[])
 {
@@ -89,18 +102,24 @@ int main(int argc, char* argv[])
             {
                 while (SDL_PollEvent(&e) != 0)
                 {
-                    if(e.type == SDL_QUIT) quit=true;
-                    else if(e.type == SDL_KEYDOWN)
-                    {
-                        switch(e.key.keysym.sym)
-                        {
-                        case SDLK_c:
-                            createDiagram();
-                            break;
-                        case SDLK_x:
-                            clearDiagram();
-                            break;
-                        }
+			switch(e.type)
+			{
+				case SDL_QUIT:
+					quit = true;
+					break;
+				case SDL_KEYDOWN:	
+	                        	switch(e.key.keysym.sym)
+        	                	{
+						case SDLK_c:
+                        	    		createDiagram();
+                            			break;
+                        			case SDLK_x:
+                            			clearDiagram();
+                            			break;
+                        		}
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					//single-click to add point
                     }
                 }
             }

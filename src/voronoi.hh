@@ -64,6 +64,7 @@ point intersection(point p0, point p1, double l);
 
 void finish_edges();
 void print_output();
+vector<seg*> getOutput();
 
 // "Greater than" comparison, for reverse sorting in priority queue.
 struct gt {
