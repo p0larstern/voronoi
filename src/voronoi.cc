@@ -1,8 +1,7 @@
 #include "voronoi.hh"
 
-priority_queue<point,  vector<point>,  gt> points; // site events
-priority_queue<event*, vector<event*>, gt> events; // circle events
 
+/*
 int main()
 {
    // Read points from input.
@@ -34,6 +33,7 @@ int main()
    finish_edges(); // Clean up dangling edges.
    print_output(); // Output the voronoi diagram.
 }
+*/
 
 void process_point()
 {
@@ -247,9 +247,4 @@ void print_output()
       point p1 = (*i)->end;
       cout << p0.x << " " << p0.y << " " << p1.x << " " << p1.y << endl;
    }
-}
-
-vector<seg*> getOutput()
-{
-	return output;
 }

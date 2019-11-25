@@ -1,4 +1,7 @@
 #include <iostream>
+#ifndef VORONOI_H
+
+#define VORONOI_H
 #include <queue>
 #include <set>
 #include <math.h>
@@ -64,7 +67,6 @@ point intersection(point p0, point p1, double l);
 
 void finish_edges();
 void print_output();
-vector<seg*> getOutput();
 
 // "Greater than" comparison, for reverse sorting in priority queue.
 struct gt {
@@ -74,3 +76,8 @@ struct gt {
 
 // Bounding box coordinates.
 double X0 = 0, X1 = 0, Y0 = 0, Y1 = 0;
+
+priority_queue<point,  vector<point>,  gt> points; // site events
+priority_queue<event*, vector<event*>, gt> events; // circle events
+
+#endif
