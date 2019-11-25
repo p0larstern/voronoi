@@ -1,7 +1,6 @@
-#include <iostream>
 #ifndef VORONOI_H
-
 #define VORONOI_H
+
 #include <queue>
 #include <set>
 #include <math.h>
@@ -38,7 +37,7 @@ struct arc {
     : p(pp), prev(a), next(b), e(0), s0(0), s1(0) {}
 };
 
-vector<seg*> output;  // Array of output segments.
+extern vector<seg*> output;  // Array of output segments.
 
 struct seg {
    point start, end;
@@ -52,7 +51,7 @@ struct seg {
    void finish(point p) { if (done) return; end = p; done = true; }
 };
 
-arc *root = 0; // First item in the parabolic front linked list.
+extern arc *root; // First item in the parabolic front linked list.
 
 // Function declarations
 void process_point();
@@ -75,9 +74,9 @@ struct gt {
 };
 
 // Bounding box coordinates.
-double X0 = 0, X1 = 0, Y0 = 0, Y1 = 0;
+extern double X0, X1, Y0, Y1;
 
-priority_queue<point,  vector<point>,  gt> points; // site events
-priority_queue<event*, vector<event*>, gt> events; // circle events
+extern priority_queue<point,  vector<point>,  gt> points; // site events
+extern priority_queue<event*, vector<event*>, gt> events; // circle events
 
 #endif

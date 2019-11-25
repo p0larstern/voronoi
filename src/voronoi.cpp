@@ -1,5 +1,13 @@
-#include "voronoi.hh"
+#include "voronoi.h"
+#include<iostream>
+using namespace std;
 
+vector<seg*> output;
+arc *root = 0;
+double X0=0,X1=0,Y0=0,Y1=0;
+
+priority_queue<point,  vector<point>,  gt> points; // site events
+priority_queue<event*, vector<event*>, gt> events; // circle events
 
 /*
 int main()
