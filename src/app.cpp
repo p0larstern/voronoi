@@ -4,12 +4,14 @@
 #include<iostream>
 #include<stdio.h>
 
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 500;
+const int SCREEN_HEIGHT = 500;
 const int POINT_SCALE = 4;
 
 SDL_Window* window = NULL;
 SDL_Renderer* rendr = NULL;
+
+vector<pair<int, int> > Points;
 
 bool init()
 {
@@ -75,13 +77,14 @@ void PrepareDiagram()
    finish_edges(); // Clean up dangling edges.
 }
 
+//0->red, 1->white
 void DrawDiagram()
 {
 	vector<seg*> outLines = output;
 	vector<seg*>::iterator i;
 	point p0, p1;
-
-        SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);		//sets drawing color to red
+	
+	SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF);		//sets drawing color to red
 	for(i = outLines.begin(); i != outLines.end(); i++)
 	{
 		p0 = (*i)->start;
@@ -106,13 +109,16 @@ void EmptyEventQ()
 
 void clearDiagram()
 {
+	cout<<"\nclearing diagram";
 	SDL_SetRenderDrawColor(rendr, 0xFF, 0xFF, 0xFF, 0xFF);		//sets drawing color to white
 	SDL_RenderClear(rendr);
 	SDL_RenderPresent(rendr);
-	cout<<"\nclearing diagram";
 	output.clear();
 	EmptyPointQ();
 	EmptyEventQ();
+	Points.clear();
+	X0=0;X1=0;Y0=0;Y1=0;
+	root = 0;
 }
 
 void AddPointToQ(int x, int y)
@@ -127,8 +133,33 @@ void AddPointToQ(int x, int y)
     if (p.y > Y1) Y1 = p.y;
 }
 
+void AddPointsToQ(int x, int y)
+{
+	Points.push_back(make_pair(x, y));
+	AddPointToQ(x, y);
+}
+
+void RefillPoints()
+{
+	for(auto i = Points.begin(); i != Points.end(); i++)
+		AddPointToQ(i->first, i->second);
+}
+/*
+void LineCleanup()
+{
+	DrawDiagram(1);
+	output.clear();
+	EmptyEventQ();
+	EmptyPointQ();
+	RefillPoints();
+}
+*/
 int main(int argc, char* argv[])
 {
+	cout<<"***VORONOI DIAGRAMS***"<<endl;
+	cout<<"Instructions:- \n1. press x key to erase the diagram\n2. press c key to create the diagram\n3. single click to add point to diagram"<<endl;
+	cout<<"\nPress any key to continue"<<endl;
+	cin.get();
 
     if(!init()) printf("initialization failed!\n");
     else
@@ -137,6 +168,7 @@ int main(int argc, char* argv[])
         else
         {
             bool quit = false;
+		bool drawn = false;
             SDL_Event e;
 			SDL_Rect pt;
 			point p;
@@ -156,6 +188,7 @@ int main(int argc, char* argv[])
 						case SDLK_c:
 										PrepareDiagram();
                         	    		DrawDiagram();
+						drawn = true;
                             			break;
                         			case SDLK_x:
                             			clearDiagram();
@@ -164,13 +197,18 @@ int main(int argc, char* argv[])
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					cout<<"\nmouse button clicked";
+					if(drawn)
+					{
+						clearDiagram();
+						drawn = false;
+					}
 					int x, y;
 					SDL_GetMouseState(&x, &y);
 					pt.first=x;
 					pt.second=y;
 					pt.h=POINT_SCALE;
 					pt.w=POINT_SCALE;
-					AddPointToQ(x, y);
+					AddPointsToQ(x, y);
 					SDL_SetRenderDrawColor(rendr, 0xFF, 0x00, 0x00, 0xFF); 		//sets drawing color to red
 					SDL_RenderFillRect(rendr, &pt);
 					SDL_RenderPresent(rendr);

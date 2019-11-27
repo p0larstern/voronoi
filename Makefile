@@ -1,2 +1,2 @@
 all:
-	g++ src/voronoi.cc src/app.cpp -w -lSDL2 -lSDL2_image -o bin/app
+	g++ src/voronoi.cpp src/app.cpp -w -lSDL2 -lSDL2_image -o bin/app
